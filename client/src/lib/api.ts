@@ -1,6 +1,6 @@
 import axios from "axios";
 
-// Set the base URL from environment variable
+// Set the base URL for your .NET backend
 const API_BASE_URL = "http://localhost:5114/api";
 
 // Create an axios instance
@@ -9,6 +9,8 @@ const api = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+  // Add withCredentials to handle CORS properly with your .NET backend
+  withCredentials: false,
 });
 
 // Add a request interceptor to attach JWT token to each request

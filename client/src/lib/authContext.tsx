@@ -12,7 +12,7 @@ interface User {
 interface AuthContextProps {
   isAuthenticated: boolean;
   user: User | null;
-  login: (username: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<void>;
   logout: () => void;
   loading: boolean;
   error: string | null;
@@ -66,21 +66,24 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setLoading(false);
   }, []);
 
-  const login = async (username: string, password: string) => {
+  const login = async (email: string, password: string) => {
     setLoading(true);
     setError(null);
     
     try {
-      console.log("Attempting login with:", { username, password });
+      console.log("Attempting login with:", { email, password });
       console.log("Sending auth request to backend...");
+      
+      // Try to connect to the .NET backend
       const response = await authAPI.login({ 
-        email: username,  // Use email as the key for the backend
+        email,  // Using email as expected by .NET backend
         password 
       });
-      console.log("Login response:", response.data);
       
-      // Extract token from response
-      const token = response.data.token || response.data.accessToken || response.data.jwtToken || response.data;
+      console.log("Login response:", response);
+      
+      // Try to extract token from response
+      const token = response?.data?.token || response?.data?.accessToken || response?.data?.jwtToken || response?.data;
       
       if (!token) {
         throw new Error("No token received from server");
@@ -93,8 +96,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
       // Extract user info from token claims or response
       const user = {
         id: decodedToken.nameid || decodedToken.sub || response.data.id || "unknown",
-        name: decodedToken.name || response.data.name || response.data.userName || username.split('@')[0],
-        username: username,
+        name: decodedToken.name || response.data.name || response.data.userName || email.split('@')[0],
+        username: email,
         role: decodedToken.role || response.data.role || "Employee"
       };
       

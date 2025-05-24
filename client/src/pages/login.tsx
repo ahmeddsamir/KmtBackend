@@ -43,6 +43,19 @@ export default function Login() {
     }
     
     try {
+      // Make direct API call since context login might be failing
+      const axios = await import('axios');
+      console.log("Sending direct API call to backend");
+      
+      // Make a direct request to your .NET backend
+      const response = await axios.default.post('http://localhost:5114/api/Authentication/Login', {
+        email: data.username,
+        password: data.password
+      });
+      
+      console.log("API Response:", response);
+      
+      // If the direct call works, use the context login
       await login(data.username, data.password);
       console.log("Login function completed");
       
@@ -50,7 +63,8 @@ export default function Login() {
       window.location.href = "/dashboard";
     } catch (err: any) {
       console.error("Login error caught in form:", err);
-      setFormError(err.message || "Login failed. Please check your credentials.");
+      console.error("Response data:", err.response?.data);
+      setFormError(err.response?.data?.message || err.message || "Failed to connect to the backend API. Please ensure your backend is running at http://localhost:5114");
     }
   };
 
