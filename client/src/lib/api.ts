@@ -40,7 +40,7 @@ api.interceptors.response.use(
 // API endpoints
 export const authAPI = {
   login: (credentials: { username: string; password: string }) => 
-    api.post("/Authentication/login", credentials),
+    api.post("/Authentication/Login", credentials),
 };
 
 export const employeesAPI = {

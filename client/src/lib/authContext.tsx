@@ -89,7 +89,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       // Extract user info from token claims or response
       const user = {
         id: decodedToken.nameid || decodedToken.sub || response.data.id || "unknown",
-        name: decodedToken.name || response.data.name || username,
+        name: decodedToken.name || response.data.name || response.data.userName || username.split('@')[0],
         username: username,
         role: decodedToken.role || response.data.role || "Employee"
       };

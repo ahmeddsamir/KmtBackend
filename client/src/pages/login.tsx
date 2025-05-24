@@ -12,7 +12,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 
 const loginSchema = z.object({
-  username: z.string().min(1, "Username is required"),
+  username: z.string().email("Valid email address is required").min(1, "Email address is required"),
   password: z.string().min(1, "Password is required"),
   rememberMe: z.boolean().optional(),
 });
@@ -57,11 +57,11 @@ export default function Login() {
                 name="username"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-sm font-medium text-neutral-700">Username</FormLabel>
+                    <FormLabel className="text-sm font-medium text-neutral-700">Email Address</FormLabel>
                     <FormControl>
                       <Input 
                         {...field} 
-                        placeholder="Enter your username" 
+                        placeholder="example@kmt.com" 
                         className="w-full px-4 py-2 border border-neutral-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary" 
                       />
                     </FormControl>
