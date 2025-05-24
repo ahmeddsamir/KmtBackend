@@ -45,6 +45,9 @@ export default function Login() {
     try {
       await login(data.username, data.password);
       console.log("Login function completed");
+      
+      // Force navigation to dashboard
+      window.location.href = "/dashboard";
     } catch (err: any) {
       console.error("Login error caught in form:", err);
       setFormError(err.message || "Login failed. Please check your credentials.");
