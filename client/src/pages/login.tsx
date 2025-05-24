@@ -48,7 +48,7 @@ export default function Login() {
       console.log("Sending direct API call to backend");
       
       // Make a direct request to your .NET backend
-      const response = await axios.default.post('http://localhost:5114/api/Authentication/Login', {
+      const response = await axios.default.post('http://localhost:5114/api/Auth/login', {
         email: data.username,
         password: data.password
       });
