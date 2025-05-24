@@ -71,8 +71,28 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setError(null);
     
     try {
+      console.log("Attempting login with:", { username, password });
       const response = await authAPI.login({ username, password });
-      const { token, user } = response.data;
+      console.log("Login response:", response.data);
+      
+      // Extract token from response
+      const token = response.data.token || response.data.accessToken || response.data.jwtToken;
+      
+      if (!token) {
+        throw new Error("No token received from server");
+      }
+      
+      // Decode token to get user info
+      const decodedToken: any = jwtDecode(token);
+      console.log("Decoded token:", decodedToken);
+      
+      // Extract user info from token claims or response
+      const user = {
+        id: decodedToken.nameid || decodedToken.sub || response.data.id || "unknown",
+        name: decodedToken.name || response.data.name || username,
+        username: username,
+        role: decodedToken.role || response.data.role || "Employee"
+      };
       
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
@@ -80,7 +100,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setUser(user);
       setIsAuthenticated(true);
     } catch (err: any) {
-      setError(err.response?.data?.message || "Login failed. Please check your credentials.");
+      console.error("Login error:", err);
+      setError(err.response?.data?.message || err.message || "Login failed. Please check your credentials.");
     } finally {
       setLoading(false);
     }
