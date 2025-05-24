@@ -34,10 +34,20 @@ export default function Login() {
 
   const onSubmit = async (data: LoginFormValues) => {
     setFormError(null);
+    console.log("Login form submitted with:", data);
+    
+    // Ensure the input is a valid email
+    if (!data.username.includes('@')) {
+      setFormError("Please enter a valid email address");
+      return;
+    }
+    
     try {
       await login(data.username, data.password);
+      console.log("Login function completed");
     } catch (err: any) {
-      setFormError(err.message || "Login failed. Please try again.");
+      console.error("Login error caught in form:", err);
+      setFormError(err.message || "Login failed. Please check your credentials.");
     }
   };
 

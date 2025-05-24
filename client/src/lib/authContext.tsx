@@ -72,11 +72,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
     
     try {
       console.log("Attempting login with:", { username, password });
-      const response = await authAPI.login({ username, password });
+      console.log("Sending auth request to backend...");
+      const response = await authAPI.login({ 
+        email: username,  // Use email as the key for the backend
+        password 
+      });
       console.log("Login response:", response.data);
       
       // Extract token from response
-      const token = response.data.token || response.data.accessToken || response.data.jwtToken;
+      const token = response.data.token || response.data.accessToken || response.data.jwtToken || response.data;
       
       if (!token) {
         throw new Error("No token received from server");
